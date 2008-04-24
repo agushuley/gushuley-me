@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="GushuleyME" default="dist" basedir=".">
+	<property name="wtk.home" location="C:\usr\sdk\wtk2.5.2"/>
+    <!-- property name="wtk.home" location="C:\Nokia\Devices\Nokia_S40_DP20_SDK_6230i"/>
+    <property name="wtk.midpapi" location="${wtk.home}\lib\classes.zip"/ -->
+	<property name="wtk.cldc.version" value="1.1"/>
+	<property name="wtk.midp.version" value="2.0"/>
+	<property name="wtk.proguard.home" location="C:\usr\sdk\proguard4.2"/>
+
+	<echo message="Initializing EclipseME Antenna build environment..."/>
+	<taskdef resource="antenna.properties" classpath="libs/antenna-bin-1.0.0.jar"/>
+
+	<target name="init">
+		<mkdir dir="build"/>
+		<mkdir dir="build/classes"/>
+		<mkdir dir="deployed"/>
+	</target>
+
+	<target depends="init" name="compile">
+		<wtkbuild destdir="build/classes" encoding="UTF-8" source="1.3" srcdir="src" debug="true" debuglevel="lines,vars,source" optimize="false" />
+	</target>
+
+	<target name="dist" depends="compile">
+		<copy file="GushuleyME.jad" todir="deployed"/>
+		<wtkpackage autoversion="false" jadfile="deployed/GushuleyME.jad" jarfile="deployed/GushuleyME.jar" obfuscate="false" preverify="false">
+			<fileset dir="build/classes"/>
+			<fileset dir="src">
+				<exclude name="**/*.java"/>
+			</fileset>
+		</wtkpackage>
+	</target>
+
+	<target name="clean">
+		<delete dir="build/classes"/>
+        <delete file="deployed/GushuleyME.jar"/>
+	</target>
+</project>
