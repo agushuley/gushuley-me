@@ -8,7 +8,7 @@ package com.gushuley.me.ui;
 import java.io.IOException;
 import javax.microedition.lcdui.*;
 
-import com.gushulay.me.Tools;
+import com.gushuley.me.Tools;
 
 /**
  *

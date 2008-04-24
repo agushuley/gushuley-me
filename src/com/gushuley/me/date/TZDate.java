@@ -1,4 +1,4 @@
-package com.gushulay.me.date;
+package com.gushuley.me.date;
 
 import java.util.Calendar;
 import java.util.Date;

@@ -1,9 +1,9 @@
-package com.gushulay.me;
+package com.gushuley.me;
 
 
 import java.util.Calendar;
 
-import com.gushulay.me.date.TZDate;
+import com.gushuley.me.date.TZDate;
 
 
 /**
