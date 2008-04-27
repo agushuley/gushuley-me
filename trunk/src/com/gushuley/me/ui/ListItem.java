@@ -5,16 +5,12 @@ package com.gushuley.me.ui;
  * @author andriy
  */
 public class ListItem {
-    public static final byte ITEM_TYPE_COMMAND = 1;
-    public static final byte ITEM_TYPE_TRADE_MARK = 2;
-    public static final byte ITEM_TYPE_PRODUCT = 3;
-    
     private final int type;
     private final String caption;
     private final String icon;
-    private final String data;
+    private final Object data;
     
-    public ListItem(byte type, String caption, String icon, String data) {
+    public ListItem(byte type, String caption, String icon, Object data) {
         this.type = type;
         this.caption = caption;
         this.icon = icon;
@@ -33,7 +29,7 @@ public class ListItem {
         return icon;
     }
 
-    public String getData() {
+    public Object getData() {
         return data;
     }
 
