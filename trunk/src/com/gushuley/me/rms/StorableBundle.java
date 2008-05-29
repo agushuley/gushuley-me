@@ -183,4 +183,18 @@ public abstract class StorableBundle {
 			throw new StorableException(name + " undefined error");
 		}
 	}
+	
+	public void remove(Storable item) throws StorableException {
+		try {
+			if (item.getRecordId() != 0) {
+				rs.deleteRecord(item.getRecordId());
+			}
+		} catch (RecordStoreNotOpenException e1) {
+			throw new StorableException("Error accesing store " + e1.getMessage());
+		} catch (InvalidRecordIDException e) {
+			throw new StorableException("Invalid record ID " + e.getMessage());
+		} catch (RecordStoreException e) {
+			throw new StorableException("General store errror " + e.getMessage());
+		}		
+	}
 }
