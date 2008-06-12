@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="GushuleyME" default="dist" basedir=".">
-	<property name="wtk.home" location="C:\usr\sdk\wtk2.5.2"/>
+	<property name="wtk.home" location="C:\wtk2.5.2"/>
     <!-- property name="wtk.home" location="C:\Nokia\Devices\Nokia_S40_DP20_SDK_6230i"/>
     <property name="wtk.midpapi" location="${wtk.home}\lib\classes.zip"/ -->
 	<property name="wtk.cldc.version" value="1.1"/>
