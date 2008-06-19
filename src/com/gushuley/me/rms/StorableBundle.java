@@ -5,7 +5,7 @@ import java.io.*;
 import javax.microedition.rms.*;
 
 public abstract class StorableBundle {
-	protected final RecordStore rs;
+	protected RecordStore rs;
 	private final String name;
 	
 	public StorableBundle(String name) throws StorableException {
@@ -132,10 +132,10 @@ public abstract class StorableBundle {
 
 	public void clearStore() throws StorableException {
 		try {
-		    RecordEnumeration e = rs.enumerateRecords(null, null, true);
-		    while (e.hasNextElement()) {
-				rs.deleteRecord(e.nextRecordId());
-		    }
+			this.rs.closeRecordStore();
+			this.rs = null;
+			RecordStore.deleteRecordStore(name);
+			this.rs = RecordStore.openRecordStore(name, true);
 		} catch (RecordStoreException e1) {
 			throw new StorableException(e1.getMessage());
 		}
