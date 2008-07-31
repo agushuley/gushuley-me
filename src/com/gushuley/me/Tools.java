@@ -40,14 +40,23 @@ public class Tools {
 		final Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
 		cal.setTimeZone(date.getTz());
-		return cal.get(Calendar.DATE) + "." + (cal.get(Calendar.MONTH) + 1) + "." + cal.get(Calendar.YEAR);
+		return rightPad("" + cal.get(Calendar.DATE), 2, '0') + "." + rightPad("" + (cal.get(Calendar.MONTH) + 1), 2, '0') + "." + rightPad("" + cal.get(Calendar.YEAR), 4, '0');
 	}
 
 	public static String toDateTime(TZDate date) {
 		final Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
 		cal.setTimeZone(date.getTz());
-		return cal.get(Calendar.DATE) + "." + (cal.get(Calendar.MONTH) + 1) + "." + cal.get(Calendar.YEAR) + 
-			" " + cal.get(Calendar.HOUR_OF_DAY) + ":" + cal.get(Calendar.MINUTE);
+		return rightPad("" + cal.get(Calendar.DATE), 2, '0') + "." + rightPad("" + (cal.get(Calendar.MONTH) + 1), 2, '0') + "." + rightPad("" + cal.get(Calendar.YEAR), 4, '0') + 
+			" " + rightPad("" + cal.get(Calendar.HOUR_OF_DAY), 2, '0') + ":" + rightPad("" + cal.get(Calendar.MINUTE), 2, '0');
+	}
+	
+	public static String rightPad(final String original, final int len, final char aChar) {
+		final StringBuffer b = new StringBuffer();
+		for (int i = 0; i < Math.max(0, len - original.length()); i++) {
+			b.append(aChar);
+		}
+		b.append(original);
+		return b.toString();
 	}
 }
