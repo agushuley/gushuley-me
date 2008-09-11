@@ -18,7 +18,7 @@ public class TypedTagPacket
 	
 	public static final short ERROR_CODE_BAD_INPUT_PACKET = 1;
 	public static final short ERROR_CODE_BAD_UNKNOWN_MESSAGE = 2;
-	public static final short ERROR_CODE_BAD_GENERAL_ERROR = 100;
+	public static final short ERROR_CODE_BAD_GENERAL_ERROR = 99;
 	
 	private short resultCode;
 	private short message;
