@@ -5,6 +5,56 @@ import java.io.*;
 import javax.microedition.rms.*;
 
 public abstract class StorableBundle {
+	public static void storableFromBytes(final Storable st, byte[] data) throws IOException {
+		final ByteArrayInputStream is = new ByteArrayInputStream(data);
+		try {
+			final DataInputStream s = new DataInputStream(is);
+			try {
+				int tag = s.read();
+				while (tag > 0) {					
+					for (int i = 0; i < st.getBindings().length; i++) {
+						final ItemPointBind b = st.getBindings()[i];
+						if (b.getTag() == tag) {
+							b.getPoint().readData(s);
+						}
+					}
+					tag = s.read();
+				}
+			} finally {
+				s.close();
+			}
+		} finally {
+			is.close();
+		}
+	}
+
+	public static byte[] storableToBytes(Storable item) 
+	throws IOException 
+	{
+		final byte[] data;
+		final ByteArrayOutputStream os = new ByteArrayOutputStream();
+		try {
+			final DataOutputStream ds = new DataOutputStream(os);				
+			try {
+				for (int i = 0; i < item.getBindings().length; i++) {						
+					final ItemPointBind b = item.getBindings()[i];
+					if (!b.isExpired()) {
+						ds.writeByte(b.getTag());
+						b.getPoint().writeData(ds);
+					}
+				}
+				ds.flush();
+				os.flush();
+				data = os.toByteArray();
+			} finally {
+				ds.close();
+			}
+		} finally {
+			os.close();
+		}
+		return data;
+	}
+	
 	protected RecordStore rs;
 	private final String name;
 	
@@ -77,27 +127,7 @@ public abstract class StorableBundle {
 			if (data == null) {
 				return null;
 			}
-			ByteArrayInputStream is = new ByteArrayInputStream(data);
-			try {
-				DataInputStream s = new DataInputStream(is);
-				try {
-					int tag = s.read();
-					while (tag > 0) {					
-						for (int i = 0; i < st.getBindings().length; i++) {
-							ItemPointBind b = st.getBindings()[i];
-							if (b.getTag() == tag) {
-								b.getPoint().readData(s);
-							}
-						}
-						tag = s.read();
-					}
-				} finally {
-					s.close();
-				}
-			}
-			finally {
-				is.close();
-			}
+			storableFromBytes(st, data);
 			st.setRecordId(recordId);
 		} catch (IOException e) {
 			throw new StorableException(e.getMessage());
@@ -146,30 +176,11 @@ public abstract class StorableBundle {
 			throw new StorableException("Store cant't contains items of class " + item.getClass().getName());
 		}
 		try {
-			final ByteArrayOutputStream os = new ByteArrayOutputStream();
-			try {
-				final DataOutputStream ds = new DataOutputStream(os);				
-				try {
-					for (int i = 0; i < item.getBindings().length; i++) {						
-						final ItemPointBind b = item.getBindings()[i];
-						if (!b.isExpired()) {
-							ds.writeByte(b.getTag());
-							b.getPoint().writeData(ds);
-						}
-					}
-					ds.flush();
-					os.flush();
-					final byte[] data = os.toByteArray();
-					if (item.getRecordId() == 0) {
-						item.setRecordId(rs.addRecord(data, 0, data.length));
-					} else {
-						rs.setRecord(item.getRecordId(), data, 0, data.length);
-					}
-				} finally {
-					ds.close();
-				}
-			} finally {
-				os.close();
+			final byte[] data = storableToBytes(item);
+			if (item.getRecordId() == 0) {
+				item.setRecordId(rs.addRecord(data, 0, data.length));
+			} else {
+				rs.setRecord(item.getRecordId(), data, 0, data.length);
 			}
 		} catch (IOException e) {
 			throw new StorableException(name + " IO Error");
@@ -183,7 +194,7 @@ public abstract class StorableBundle {
 			throw new StorableException(name + " undefined error");
 		}
 	}
-	
+
 	public void remove(Storable item) throws StorableException {
 		try {
 			if (item.getRecordId() != 0) {
